@@ -8,25 +8,19 @@ import time, subprocess
 # stepper motor 1 backward and stepper motor 2 forward goes to origin (negative direction)
 
 # Imaging area: 475 steps along y, 410 steps along x(+-30 steps)
-# coord_center = [(0,0), (950,1000),(4950,1000),(8950,1000),(8950,5000),(4950,5000),(950,5000)]
-# coord_center = [(0,0), (1000,1200),(4950,1200),(8950,1200),(8950,5200)]
+# coord_center = [(0,0), (950,0),(4950,0),(8950,0),(8950,4000),(4950,4000),(950,4000)]
 # coord = [(0,0), (100,1000),(4100,1000),(8100,1000),(8100,5000),(4100,5000),(100,5000)]
-# coord = [(0,0), (200,200),(4200,200),(8200,200),(8200,4200)] # 4 well
-coord = [(0,0), (200,200),(4200,200),(8200,200)] # 4 well
-# coord = [(0,0), (400,1000)]
-fov = (435,500) # Slightly larger than actual FOV to ensure images does not overlap
-
-# Was 6,4
-x_fov,y_fov = 5,4
+coord = [(0,0), (400,1000)]
+fov = (440,505) # Slightly larger than actual FOV to ensure images does not overlap
 
 kit = MotorKit(address = 0x61)
 
-save_dir = "temp_img_cache/"
+save_dir = "field_test/"
 
 def image_capture(file_name):
 
     command = ["libcamera-still", "-o", file_name, "--nopreview", 
-                   "--shutter", "15000", "--gain", "20", "--timeout", "1200"]
+                   "--shutter", "18000", "--gain", "20"]
     subprocess.run(command, check=True)
 
     return
@@ -88,6 +82,7 @@ def move_y_fov(count, well_num, wait = 0.001):
 # y_fov should be even number to save some effort (or x movement is required to reset)
 def image_well(well_num, wait):
     count = 1
+    x_fov, y_fov = 6,4
     image_capture(save_dir + f"well_{well_num}_img_{count}.jpg")
     count += 1
     for i in range(y_fov):
@@ -109,7 +104,6 @@ def XY_cycle(step_wait = 0):
     for i in range(len(coord)-1):
         from_to(coord[i], coord[i+1], step_wait)
         image_well(i+1, step_wait)
-        
     
     return
 

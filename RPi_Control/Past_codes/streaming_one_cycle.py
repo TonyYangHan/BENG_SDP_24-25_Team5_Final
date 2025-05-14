@@ -1,4 +1,4 @@
-from XY_cycle_well_cycle_2 import XY_cycle
+from XY_cycle import XY_cycle
 import os, datetime as dt, pytz as tz, time, argparse, gc
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload

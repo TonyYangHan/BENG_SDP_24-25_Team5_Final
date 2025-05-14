@@ -6,8 +6,7 @@ import time, subprocess
 # coords are (x,y) system, viewing from the direction where the notes on the tape are inverted
 # x difference between consecutive plates = 4000, also y_diff = 4000
 # stepper motor 1 backward and stepper motor 2 forward goes to origin (negative direction)
-# coord = [(0,0), (950,0),(4950,0),(8950,0),(8950,4000),(4950,4000),(950,4000)]
-coord = [(0,0), (400,1000),(4400,1000),(8400,1000),(8400,5000),(4400,5000),(400,5000)]
+coord = [(0,0), (950,0),(4950,0),(8950,0),(8950,4000),(4950,4000),(950,4000)]
 
 # cam = Picamera2()
 
@@ -43,15 +42,14 @@ def from_to(start, end, step_wait):
         time.sleep(step_wait)
     return
 
-def XY_cycle(step_wait = 0.001):
+def XY_cycle(step_wait = 0):
     resetXY()
 
     for i in range(len(coord)-1):
         from_to(coord[i], coord[i+1], step_wait)
         
         # cam.capture_file(f"temp_img_cache/well_{i+1}.jpg")
-        command = ["libcamera-still", "-o", f"temp_img_cache/well_{i+1}.jpg", "--nopreview", 
-                   "--shutter", "18000", "--gain", "20"]
+        command = ["libcamera-still", "-o", f"temp_img_cache/well_{i+1}.jpg"]
         subprocess.run(command, check=True)
 
         # time.sleep(5)
@@ -59,5 +57,3 @@ def XY_cycle(step_wait = 0.001):
     return
 
 # cam.stop()
-if __name__ == "__main__":
-    XY_cycle(0)

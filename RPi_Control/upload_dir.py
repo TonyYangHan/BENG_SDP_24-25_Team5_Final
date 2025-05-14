@@ -1,5 +1,4 @@
-from XY_cycle_well_cycle_2 import XY_cycle
-import os, datetime as dt, pytz as tz, time, argparse, gc
+import os, datetime as dt, pytz as tz
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.oauth2.credentials import Credentials
@@ -11,6 +10,7 @@ SCOPES = ['https://www.googleapis.com/auth/drive']
 
 # folder = "1kGmciW9RG8USL8sBMpX3glfaHrE_F_Ov" # Main folder for 24-25 images
 folder = "1r-Kjq9R0YMJXNLJERSEgAehbDsFYAmBK" # Folder for hood_test
+local_folder = "temp_img_cache/"
 
 def get_refreshed_credentials(SCOPES):
     creds = None
@@ -32,10 +32,8 @@ def get_refreshed_credentials(SCOPES):
 
 creds = get_refreshed_credentials(SCOPES)
 
-XY_cycle()
-
-for ip in sorted(os.listdir("temp_img_cache")):
-    full_path = "temp_img_cache/" + ip
+for ip in sorted(os.listdir(local_folder)):
+    full_path = local_folder + ip
 
     service = build('drive', 'v3', credentials=creds)
 
@@ -50,4 +48,4 @@ for ip in sorted(os.listdir("temp_img_cache")):
     
     os.remove(full_path)
 
-print("Imaging cycle completed")
+print("Upload completed")

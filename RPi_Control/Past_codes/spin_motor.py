@@ -1,7 +1,7 @@
 from adafruit_motorkit import MotorKit
 import gc
 # Setting parameters for DC stir motors
-th1,th2,th3,th4 = 0.2,0.2,0.2,0.2 # throttle for 4 motors (top two CW, bottom two CCW)
+th1,th2,th3,th4 = 0.01,0.01,-0.01,-0.01 # throttle for 4 motors (top two CW, bottom two CCW)
 dc_addr = []
 
 # We delete the object created each iteration to prevent excessive memory usage,

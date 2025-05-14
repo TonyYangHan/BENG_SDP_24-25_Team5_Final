@@ -12,10 +12,10 @@ from adafruit_motor import stepper
 
 kit = MotorKit(address = 0x61)
 
-steps = 400
+steps = 600
 
 for i in range(steps):
-	kit.stepper1.onestep(direction=stepper.BACKWARD, style=stepper.SINGLE)
-	# kit.stepper2.onestep(direction=stepper.FORWARD, style=stepper.SINGLE)
+	kit.stepper1.onestep(direction=stepper.FORWARD, style=stepper.SINGLE)
+	kit.stepper2.onestep(direction=stepper.BACKWARD, style=stepper.SINGLE)
 	print(i)
 

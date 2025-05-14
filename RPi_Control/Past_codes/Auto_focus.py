@@ -1,13 +1,9 @@
 from adafruit_motorkit import MotorKit
 from adafruit_motor import stepper
-import cv2, time, subprocess as sp
+import cv2, subprocess as sp
 
 # 2500-3500 steps seem to be the best focus range (beads with water, cell phone light)
-# 3150 (3100-3300) from the bottom, or 1850 from top gives the best focus
-# shutter = 40000 (15000 with max bright)gain = 30-35 for totally dark condition with 4 corner LEDs parallel (100 Ohms)
-# shutter = 15000, gain = 20 with maximum brightness of ambient light and no top light
-# shutter = 13000, gain = 10 finds a balance between top light (constrast) and ambient illumination.
-# shutter = 18000, gain = 20 for the black top (very good contrast)
+# 3150 from the bottom, or 1850 from top gives the best focus
 
 # Initialize Motor Kit and Camera
 kit = MotorKit(address = 0x60)
@@ -19,16 +15,15 @@ def calculate_sharpness(ip):
     return laplacian
 
 # Autofocus routine
-def autofocus(stride = 50, move_range = 1000):
+def autofocus(zoom_range = 1000, stride = 50):
     max_sharpness = 0
     best_position = 0
 
-    for i in range(0, move_range, stride):  # Limit the number of steps
+    for i in range(0, zoom_range, stride):  # Limit the number of steps
 
         path_name = f"z_images/z-pos_{i}.jpg"
-        iso = 100
-        cmd = ["libcamera-still", "-o", path_name, "--nopreview", "--shutter", "18000", "--gain", "20",
-               "--timeout", "2000"] # optimal settings for beads with z height at 3000 from origin
+        cmd = ["libcamera-still", "-o", path_name, "--nopreview", "--shutter", "18000", "--gain", 
+               "20", "--timeout", "1500"]
         sp.run(cmd, check = True)
         sharpness = calculate_sharpness(path_name)
         
@@ -43,7 +38,7 @@ def autofocus(stride = 50, move_range = 1000):
             kit.stepper1.onestep(direction = stepper.BACKWARD)
             kit.stepper2.onestep(direction = stepper.BACKWARD)
     
-    for i in range(move_range-best_position):
+    for i in range(zoom_range-best_position):
         kit.stepper1.onestep(direction = stepper.FORWARD)
         kit.stepper2.onestep(direction = stepper.FORWARD)
 
